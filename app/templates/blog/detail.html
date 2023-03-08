@@ -1,0 +1,21 @@
+{% extends "layout.html" %}
+
+{% block page_header %}
+{{ post.title }}
+{% if post.publish %}
+<div class="text-white fs-5 ms-1">{{post.publish.strftime('%a %d %B %Y')}}</div>
+{% endif %}
+{% endblock page_header %}
+
+{% block content %}
+<div class="container mt-3">
+  <div class="col-md-8 offset-md-2">
+  <ul class="list-unstyled">
+  {% for tag in tags %}
+  <li class="d-inline badge border border-primary border-2 text-primary">{{tag}}</li>
+  {% endfor %}
+  </ul>
+    <p>{{post.body|safe}}</p>
+  </div>
+</div>
+{% endblock content %}
