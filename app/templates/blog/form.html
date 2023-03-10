@@ -3,13 +3,11 @@
 {% block page_header %}{{ title }}{% endblock page_header %}
 
 {% block js %}
-<script src="https://cdn.ckeditor.com/ckeditor5/36.0.1/classic/ckeditor.js"></script>
+<script src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"></script>
 <script>
-    ClassicEditor
-        .create( document.querySelector( '#editor' ) )
-        .catch( error => {
-            console.error( error );
-        } );
+const simplemde = new SimpleMDE({
+  spellChecker: false
+});
 </script>
 <script type="text/javascript">
   const form = document.querySelector('#form');
@@ -58,6 +56,14 @@
         <label for="title" class="form-label">Title</label>
         <input type="text" class="form-control {% if errors.title %}is-invalid{% endif %}" name="title" id="title" value="{{ post.title }}">
         <div class="invalid-feedback">{{ errors.title }}</div>  
+      </div>
+      <div class="mb-3">
+        <label for="image" class="form-label">Image</label>
+        {% if post.image %}
+        <span class="d-block text-muted fs-5">uploaded: <a href="{{ url_for('uploads', filename=post.image) }}">{{ url_for('uploads', filename=post.image) }}</a></span>
+        {% endif %}
+        <input type="file" class="form-control {% if errors.image %}is-invalid{% endif %}" name="image" id="image" value="{{ post.image }}">
+        <div class="invalid-feedback">{{ errors.image }}</div>  
       </div>
       <div class="mb-3">
         <label for="body" class="form-label">Body</label>

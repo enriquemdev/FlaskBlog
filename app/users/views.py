@@ -2,32 +2,33 @@ import functools
 from flask import Blueprint, request, flash, render_template, redirect, url_for, session, g
 from werkzeug.security import check_password_hash, generate_password_hash
 from app.db import get_db
-from app.utils import form_errors
+from app.utils import form_errors, validate
 
 bp = Blueprint('users', __name__)
 
 @bp.route('/register', methods=('GET', 'POST'))
 def register():
   db = get_db()
-  errors = form_errors('email', 'password')
   if request.method == 'POST':
+    username = request.form['username']
     email = request.form['email']
     password = request.form['password']
     
-    if email and password:
+    if username and email and password:
         hash_password = generate_password_hash(password)
         query = """--sql
-        INSERT INTO users (`email`, `password`) VALUES ('%s', '%s')""" %(email, hash_password)
+        INSERT INTO users (`username`, `email`, `password`) VALUES ('%s', '%s', '%s')""" %(username, email, hash_password)
         db.execute(query)
         db.commit()
         flash('Account was created', 'success')
         return redirect(url_for('users.login'))
-      
-    if not email:
-      errors['email'] = errors['blank']
-    if not password:
-      errors['password'] = errors['blank']
-  return render_template('users/register.html', errors=errors)
+    
+    # handle errors
+    fields = form_errors('username', 'email', 'password')
+    errors = validate(fields, username, email, password)
+    return render_template('users/register.html', errors=errors)
+
+  return render_template('users/register.html', errors=None)
 
 @bp.route('/login', methods=('GET', 'POST'))
 def login():
@@ -37,7 +38,7 @@ def login():
     password = request.form['password']
 
     user = db.execute("""--sql
-    SELECT * FROM users WHERE email = ?""", (email,)).fetchone()
+    SELECT * FROM users WHERE email = ? or username = ?""", (email, email)).fetchone()
     if user is None or not check_password_hash(user['password'], password):
       flash('The email address or password you entered is incorrect', 'danger')
       return redirect(url_for('users.login'))

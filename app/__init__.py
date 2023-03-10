@@ -1,12 +1,13 @@
-from flask import Flask
+from flask import Flask, send_from_directory
 from pathlib import Path
 
 
 def create_app():
     app = Flask(__name__, instance_relative_config=True)
     app.config.from_mapping(
+        DATABASE=Path(app.instance_path) / 'db.sqlite3',
         SECRET_KEY='dev',
-        DATABASE=Path(app.instance_path) / 'db.sqlite3'
+        UPLOAD_DIR=Path('.') / 'app/uploads'
     )
     
     try:
@@ -25,5 +26,9 @@ def create_app():
     
     from . import db
     db.init_app(app)
+
+    @app.route('/uploads/<filename>')
+    def uploads(filename):
+        return send_from_directory(app.config['UPLOAD_DIR'].absolute(), filename)
     
     return app

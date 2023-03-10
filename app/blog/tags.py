@@ -13,9 +13,9 @@ def create_tags(tags, post_id):
     tag_id = db.execute("""--sql
     SELECT id FROM tags WHERE name = ?""", (name,)).fetchone()['id']
 
-    # Insert into the posts_tags table post_id and tag_id
+    # Insert into the tagged_items table post_id and tag_id
     db.execute("""--sql
-    INSERT INTO posts_tags (post_id, tag_id) VALUES (?, ?)""", (post_id, tag_id))
+    INSERT INTO tagged_items (post_id, tag_id) VALUES (?, ?)""", (post_id, tag_id))
   
   list(map(insert_tag, tags))
   db.commit()
@@ -24,7 +24,7 @@ def update_tags(tags, post_id):
    db = get_db()
    # Delete or tags with post_id
    db.execute("""--sql
-   DELETE FROM posts_tags WHERE post_id = ?""", (post_id,))
+   DELETE FROM tagged_items WHERE post_id = ?""", (post_id,))
    db.commit()
    # Create tags with updated tags
    create_tags(tags, post_id)
@@ -33,6 +33,6 @@ def update_tags(tags, post_id):
 def get_tags(post_id):
    db = get_db()
    query = f"""--sql
-   SELECT name as tag_name FROM posts_tags INNER JOIN posts ON posts.id = post_id INNER JOIN tags ON tags.id == tag_id WHERE posts.id = %s""" %post_id
+   SELECT name as tag_name FROM tagged_items INNER JOIN posts ON posts.id = post_id INNER JOIN tags ON tags.id == tag_id WHERE posts.id = %s""" %post_id
    tags = db.execute(query).fetchall()
    return list(map(lambda tag: tag['tag_name'], tags))

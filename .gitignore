@@ -3,3 +3,5 @@ instance/
 .venv/
 .DS_Store
 __pycache__
+sass/
+uploads/
