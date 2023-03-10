@@ -26,6 +26,7 @@ def register():
     # handle errors
     fields = form_errors('username', 'email', 'password')
     errors = validate(fields, username, email, password)
+    
     return render_template('users/register.html', errors=errors)
 
   return render_template('users/register.html', errors=None)

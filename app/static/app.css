@@ -32,3 +32,10 @@ body {
   width: 65px;
   height: 65px;
 }
+
+.codehilite {
+  border-radius: 10px;
+}
+pre {
+  padding: 1rem;
+}

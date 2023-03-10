@@ -3,7 +3,7 @@
 {% block page_header %}
 {{ post.title }}
 {% if post.publish %}
-  <div class="text-white fs-5 ms-1">{{post.publish|dateformat}}</div>
+  <div class="text-white fs-5 ms-1 text-uppercase">{{post.publish|dateformat}}</div>
 {% endif %}
 {% endblock page_header %}
 

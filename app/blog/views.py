@@ -135,6 +135,7 @@ def post_detail(slug):
         db.execute(query)
         db.commit()
         flash('Your comment was created', category='success')
+        return redirect(url_for('blog.post_detail', slug=slug))
 
     if post is None:
        abort(404)

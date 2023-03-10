@@ -8,7 +8,7 @@
     <form action="">
       <div class="input-group mb-3">
         <input type="text" name="q" id="q" value="{{ request.args.q }}" placeholder="Find post" class="form-control">
-        <button class="btn btn-primary">Go</button>
+        <button class="btn btn-primary"><i class="bi bi-search"></i></button>
       </div>
     </form>
   </div>
@@ -27,24 +27,24 @@
             {% set post_url = url_for('blog.post_detail', slug=post.slug) %}
             <a href="{{ post_url }}" class="text-decoration-none">{{post.title}}</a>
           </h2>
-          <div class="text-muted fs-6">
+          <div class="text-muted fs-6 text-uppercase">
           {% if post.publish and post.publish <= date %}
             {{post.publish|dateformat}}
           {% endif  %}
 
           {% if not post.publish %}
-          <div class=" badge border border-danger border-2 text-danger">draft</div>
+          <div class=" badge border border-danger border-2 text-danger"><i class="bi bi-pen"></i>draft</div>
           {% endif %}
             
           {% if post.publish and (post.publish > date) %}
             <div class="badge border border-dark border-2 text-dark">
-              scheduled
+             <i class="bi bi-clock"></i> scheduled
             </div>
           {% endif %}
           </div>
           <p>{{post.body|markdown|striptags|truncate}}</p>
           <div class="mb-3">
-            <a href="{{ post_url }}" class="btn btn-primary">Read more</a>
+            <a href="{{ post_url }}" class="btn btn-primary">Read more <i class="bi bi-arrow-right"></i></a>
           </div>
         </article>
       </div>
@@ -56,7 +56,7 @@
     <nav aria-label="Page navigation example">
       <ul class="pagination">
         <li class="page-item">
-          <a class="page-link" href="{{ url_for('blog.posts') }}?page={{ paginator.prev_page }}{% if search %}&q={{ search }}{% endif %}" aria-label="Previous">
+          <a class="page-link" {% if paginator.prev_page > 0 %}href="{{ url_for('blog.posts') }}?page={{ paginator.prev_page }}{% if search %}&q={{ search }}{% endif %}"{% endif %} aria-label="Previous">
             <span aria-hidden="true">&laquo;</span>
           </a>
         </li>
@@ -64,7 +64,7 @@
         <li class="page-item"><a class="page-link {% if page == paginator.page %}active{% endif %}" href="{{ url_for('blog.posts') }}?page={{ page }}{% if search %}&q={{ search }}{% endif %}">{{ page }}</a></li>
         {% endfor %}
         <li class="page-item">
-          <a class="page-link" href="{{ url_for('blog.posts') }}?page={{ paginator.next_page }}{% if search %}&q={{ search }}{% endif %}" aria-label="Next">
+          <a class="page-link" {% if paginator.page_num > paginator.page %}href="{{ url_for('blog.posts') }}?page={{ paginator.next_page }}{% if search %}&q={{ search }}{% endif %}"{% endif %} aria-label="Next">
             <span aria-hidden="true">&raquo;</span>
           </a>
         </li>
