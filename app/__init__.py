@@ -2,7 +2,7 @@ from flask import Flask, send_from_directory
 from pathlib import Path
 
 
-def create_app(host=None, port=None):
+def create_app():
     app = Flask(__name__, instance_relative_config=True)
     app.config.from_mapping(
         DATABASE=Path(app.instance_path) / 'db.sqlite3',
@@ -32,3 +32,5 @@ def create_app(host=None, port=None):
         return send_from_directory(app.config['UPLOAD_DIR'].absolute(), filename)
     
     return app
+
+my_app = create_app()
