@@ -2,7 +2,7 @@ from flask import Flask, send_from_directory
 from pathlib import Path
 
 
-def create_app():
+def create_app(host=None, port=None):
     app = Flask(__name__, instance_relative_config=True)
     app.config.from_mapping(
         DATABASE=Path(app.instance_path) / 'db.sqlite3',
